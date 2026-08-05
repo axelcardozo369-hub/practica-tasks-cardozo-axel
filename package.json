@@ -1,0 +1,26 @@
+{
+  "name": "practica-tasks-cardozo-axel",
+  "version": "1.0.0",
+  "description": "**NOMBRE Y APELLIDO**: Axel Cardozo",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "start": "node app.js",
+    "url": "git+https://github.com/axelcardozo369-hub/practica-tasks-cardozo-axel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/axelcardozo369-hub/practica-tasks-cardozo-axel/issues"
+  },
+  "homepage": "https://github.com/axelcardozo369-hub/practica-tasks-cardozo-axel#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "mysql2": "^3.23.2",
+    "sequelize": "^6.37.8"
+  }
+}
