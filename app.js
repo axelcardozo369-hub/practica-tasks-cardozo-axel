@@ -1,5 +1,7 @@
 import express from "express";
 import sequelize from "./src/config/database.js";
+import user from "./src/models/users.model.js";
+import task from "./src/models/tasks.model.js";
 
 const app = express();
 const puerto = 3500;
@@ -7,7 +9,9 @@ app.use(express.json());
 const probarConexionDataBase = async () =>{
   try {
     await sequelize.authenticate();
-    console.log('Conexion con tu base de datos exitosa Axel')
+    console.log('Conexion con tu base de datos exitosa Axel');
+    await sequelize.sync();
+    console.log('Tablas de usuarios y de las tareas conectadas correctamente');
   } catch (error) {
     console.log('No se pudo hacer la conexion de tu base de datos, corrige el error',error);
   }
