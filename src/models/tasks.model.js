@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
-import user from "./users.model.js";
+
 import { title } from "node:process";
-const task = sequelize.define('task',{
+export const TaskModel = sequelize.define('Task',{
     id:{
         type:DataTypes.INTEGER,
         primaryKey:true,
@@ -22,5 +22,4 @@ const task = sequelize.define('task',{
         defaultValue:false,
 
     }
-})
-export default task;
+});

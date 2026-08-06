@@ -1,7 +1,10 @@
 import express from "express";
 import sequelize from "./src/config/database.js";
-import user from "./src/models/users.model.js";
-import task from "./src/models/tasks.model.js";
+import {User} from "./src/models/users.model.js";
+import {
+  TaskModel
+} from "./src/models/tasks.model.js";
+import { routerTask } from "./src/routes/taks.routes.js";
 
 const app = express();
 const puerto = 3500;
@@ -17,9 +20,10 @@ const probarConexionDataBase = async () =>{
   }
 }
 probarConexionDataBase();
-app.use("/", (req, res) => {
-  return res.json({ mensaje: "Servidor funcionando" });
-});
+
+app.use(routerTask)
+
+
 app.listen(puerto, () => {
   console.log(`Servidor Funcionando `);
   console.log(`enlace servidor: http://localhost/${puerto}`);
