@@ -1,10 +1,10 @@
 import express from "express";
 import sequelize from "./src/config/database.js";
-import {User} from "./src/models/users.model.js";
-import {
-  TaskModel
-} from "./src/models/tasks.model.js";
+
+import { TaskModel} from "./src/models/tasks.model.js";
+import { UserModel } from "./src/models/users.model.js";
 import { routerTask } from "./src/routes/taks.routes.js";
+import { routerUsers } from "./src/routes/users.routes.js";
 
 const app = express();
 const puerto = 3500;
@@ -21,7 +21,8 @@ const probarConexionDataBase = async () =>{
 }
 probarConexionDataBase();
 
-app.use(routerTask)
+app.use(routerTask);
+app.use(routerUsers);
 
 
 app.listen(puerto, () => {
