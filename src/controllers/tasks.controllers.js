@@ -2,7 +2,7 @@ import { TaskModel } from "../models/tasks.model.js";
 
 export const getTasks = async (req,res)=>{
     try {
-        const tasks = await task.findAll();
+        const tasks = await TaskModel.findAll();
         return res.status(200).json(tasks);
     } catch (error) {
         console.log(error);
@@ -10,34 +10,60 @@ export const getTasks = async (req,res)=>{
         
     }
 }
+export const verPorIdTask = async (req,res) =>{
+    try {
+        const taskId = await TaskModel.findByPk(req.params.id);
+        if (taskId) {
+            res.json(taskId)
+        }else{
+            res.status(404).json({mensaje:'la tarea no fue encontrada'})
+        }
+    } catch (error) {
+        res.status(500).json({mensaje:'Hay error',error:error.message});
+    }
+}
 export const agregarTask = async (req,res) =>{
     try {
         const {title, description} = req.body;
-        const creacionTask = await TaskModel.create({
-            title,
-            description,
-        });
-        res.status(201).json({mensaje:'tarea agregada',agregarTask})
+        const taskNueva = await TaskModel.create({
+           title,
+           description
+        })
+        return res.status(201).json({mensaje:'tarea agregada con exito'})
     } catch (error) {
         console.log(error);
         res.status(500).json({mensaje:'Error al poder agregar en la base de datos '})
         
     }
+
 }
 export const editarTask = async (req,res) =>{
-
     try {
-        const modificarTask = await TaskModel.update(req.body,{
-            where:{id: req.params.id}
-        });
-        if (modificarTask) {
-            const taskModificada  = await TaskModel.findByPk(req.params.id)
-            res.json({mensaje:'Tarea modificada',taskModificada});
-        }else{
-            res.status(404).json({mensaje:'tarea no encontrada'})
+        const id = req.params.id;
+        const {title, description} = req.body;
+        const taskAfectadas = await TaskModel.update(
+            {title,description},
+            {where:{id}}
+        );
+        if (taskAfectadas > 0) {
+            const taskModificada = await TaskModel.findByPk(id);
+            return res.json({mensaje:'la tarea fué modificada',taskModificada});
+        } else {
+            return res.status(404).json({mensaje:'la tarea no fue encontrada'})
         }
     } catch (error) {
-        console.log(error)
-        res.status(500).json({mensaje:'Error en poder modificar la tarea',error});
+        console.log(error);
+        return res.status(500).json({mensaje:'Error al poder modificar tareas',error:error.message
+        })
     }
+}
+export const eliminarTasks = async (req,res) =>{
+    try {
+        const {id} = req.params;
+        const borraTasks = await TaskModel.destroy({where: {id}});
+        if (borraTasks) res.json({mensaje:'se borro esta tarea'});
+        else res.status(404).json({mensaje:'No se encontro esta tarea'})
+    } catch (error) {
+        res.status(500).json({mensaje:'error al poder eliminar tarea',error:error.message});
+    }   
 }
