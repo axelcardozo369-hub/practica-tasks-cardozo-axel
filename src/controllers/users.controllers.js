@@ -1,3 +1,4 @@
+import { profileModel } from "../models/profile.model.js";
 import { TaskModel } from "../models/tasks.model.js";
 import { UserModel } from "../models/users.model.js";
 export const getUsersTodos = async (req, res) => {
@@ -6,7 +7,17 @@ export const getUsersTodos = async (req, res) => {
       attributes: {
         exclude: ["user_id", "password"],
       },
-      include: [{ model: TaskModel, as: "tasks" }],
+      include: [
+        {
+          model: TaskModel,
+          as: "tasks",
+        },
+        {
+          model: profileModel,
+          as: "profile",
+          attributes: ["biografia", "telefono"],
+        },
+      ],
     });
     res.json({ mensaje: "Estos son los usuarios:", user });
   } catch (error) {
@@ -58,7 +69,14 @@ export const getPorIdUsers = async (req, res) => {
   try {
     const idUsers = await UserModel.findByPk(req.params.id, {
       attributes: { exclude: ["password"] },
-      include: [{ model: TaskModel, as: "tasks" }],
+      include: [
+        { model: TaskModel, as: "tasks" },
+        {
+          model: profileModel,
+          as: "profile",
+          attributes: ["biografia", "telefono"],
+        },
+      ],
     });
     if (idUsers) {
       res

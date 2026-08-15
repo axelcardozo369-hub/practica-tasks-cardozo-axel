@@ -5,6 +5,7 @@ import { TaskModel } from "./src/models/tasks.model.js";
 import { UserModel } from "./src/models/users.model.js";
 import { routerTask } from "./src/routes/taks.routes.js";
 import { routerUsers } from "./src/routes/users.routes.js";
+import { profileRoutes } from "./src/routes/profile.routes.js";
 
 const app = express();
 const PORT = 3005;
@@ -26,6 +27,7 @@ probarConexionDataBase();
 
 app.use("/api", routerTask);
 app.use("/api", routerUsers);
+app.use("/api/", profileRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor Funcionando `);
