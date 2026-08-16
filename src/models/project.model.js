@@ -1,27 +1,29 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
-
-export const ProfileModel = sequelize.define("profile", {
+import { UserModel } from "./users.model.js";
+export const ProjectModel = sequelize.define("project", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
-  biografia: {
+  nombre: {
     type: DataTypes.STRING(100),
     allowNull: false,
   },
-  telefono: {
-    type: DataTypes.STRING(50),
+  descripcion: {
+    type: DataTypes.STRING(100),
     allowNull: false,
   },
   user_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    unique: true,
     references: {
-      model: "Users",
+      model: "users",
       key: "id",
     },
   },
 });
+
+UserModel.hasMany(ProjectModel, { foreignKey: "user_id", as: "projects" });
+ProjectModel.belongsTo(UserModel, { foreignKey: "user_id", as: "user" });

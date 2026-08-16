@@ -1,8 +1,8 @@
 import { BelongsTo, DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
-
 import { title } from "node:process";
 import { UserModel } from "./users.model.js";
+import { ProjectModel } from "./project.model.js";
 export const TaskModel = sequelize.define("Task", {
   id: {
     type: DataTypes.INTEGER,
@@ -30,6 +30,14 @@ export const TaskModel = sequelize.define("Task", {
       key: "id",
     },
   },
+  project_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: "projects",
+      key: "id",
+    },
+  },
 });
 UserModel.hasMany(TaskModel, {
   foreignKey: "user_id",
@@ -39,3 +47,5 @@ TaskModel.belongsTo(UserModel, {
   foreignKey: "user_id",
   as: "user",
 });
+ProjectModel.hasMany(TaskModel, { foreignKey: "project_id", as: "tasks" });
+TaskModel.belongsTo(ProjectModel, { foreignKey: "project_id", as: "project" });

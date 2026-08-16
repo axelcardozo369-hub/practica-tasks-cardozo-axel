@@ -1,3 +1,4 @@
+import { ProjectModel } from "../models/project.model.js";
 import { TaskModel } from "../models/tasks.model.js";
 import { UserModel } from "../models/users.model.js";
 
@@ -38,7 +39,7 @@ export const verPorIdTask = async (req, res) => {
 };
 export const agregarTask = async (req, res) => {
   try {
-    const { title, description, user_id } = req.body;
+    const { title, description, user_id, project_id } = req.body;
 
     if (user_id) {
       const usuarioExiste = await UserModel.findByPk(user_id);
@@ -48,18 +49,33 @@ export const agregarTask = async (req, res) => {
           .json({ mensaje: "El usuario no existe en la base de datos" });
       }
     }
+    const projectoExiste = await ProjectModel.findByPk(project_id);
+    if (!project_id) {
+      return res.status(404).json({
+        mensaje:
+          "falta el proyecto, primero debes crear tu proyecto para agregar tareas",
+      });
+    }
+    const projectExistente = await ProjectModel.findByPk(project_id);
+    if (!projectExistente) {
+      return res
+        .status(400)
+        .json({ mensaje: "Error, debes crear el proyecto primero" });
+    }
 
     const taskNueva = await TaskModel.create({
       title,
       description,
       user_id,
+      project_id,
     });
     return res.status(201).json({ mensaje: "tarea agregada con exito" });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({ mensaje: "Error al poder agregar en la base de datos " });
+    res.status(500).json({
+      mensaje: "Error al poder agregar en la base de datos ",
+      error: error.message,
+    });
   }
 };
 export const editarTask = async (req, res) => {

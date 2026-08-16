@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
 import { TaskModel } from "./tasks.model.js";
-import { profileModel } from "./profile.model.js";
+import { ProfileModel } from "./profile.model.js";
 export const UserModel = sequelize.define("User", {
   id: {
     type: DataTypes.INTEGER,
@@ -23,5 +23,5 @@ export const UserModel = sequelize.define("User", {
   },
 });
 
-UserModel.hasOne(profileModel, { foreignKey: "user_id", as: "profile" });
-profileModel.belongsTo(UserModel, { foreignKey: "user_id", as: "users" });
+UserModel.hasOne(ProfileModel, { foreignKey: "user_id", as: "profile" });
+ProfileModel.belongsTo(UserModel, { foreignKey: "user_id", as: "user" });

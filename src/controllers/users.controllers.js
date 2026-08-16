@@ -1,6 +1,8 @@
-import { profileModel } from "../models/profile.model.js";
+import { ProfileModel } from "../models/profile.model.js";
+import { ProjectModel } from "../models/project.model.js";
 import { TaskModel } from "../models/tasks.model.js";
 import { UserModel } from "../models/users.model.js";
+import { projectRouter } from "../routes/projects.routes.js";
 export const getUsersTodos = async (req, res) => {
   try {
     const user = await UserModel.findAll({
@@ -13,9 +15,14 @@ export const getUsersTodos = async (req, res) => {
           as: "tasks",
         },
         {
-          model: profileModel,
+          model: ProfileModel,
           as: "profile",
           attributes: ["biografia", "telefono"],
+        },
+        {
+          model: ProjectModel,
+          as: "projects",
+          attributes: ["user_id", "nombre", "descripcion"],
         },
       ],
     });
@@ -72,9 +79,14 @@ export const getPorIdUsers = async (req, res) => {
       include: [
         { model: TaskModel, as: "tasks" },
         {
-          model: profileModel,
+          model: ProfileModel,
           as: "profile",
           attributes: ["biografia", "telefono"],
+        },
+        {
+          model: ProjectModel,
+          as: "projects",
+          attributes: ["user_id", "nombre", "descripcion"],
         },
       ],
     });
