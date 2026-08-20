@@ -1,3 +1,4 @@
+import { CategoryModel } from "../models/category.model.js";
 import { ProfileModel } from "../models/profile.model.js";
 import { ProjectModel } from "../models/project.model.js";
 import { TaskModel } from "../models/tasks.model.js";
@@ -50,6 +51,7 @@ export const getAllProjects = async (req, res) => {
           as: "tasks",
           attributes: ["title", "description", "user_id"],
         },
+        { model: CategoryModel, as: "category", attributes: ["name"] },
       ],
     });
     return res

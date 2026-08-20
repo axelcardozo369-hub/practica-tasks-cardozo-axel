@@ -49,6 +49,14 @@ export const agregarTask = async (req, res) => {
           .json({ mensaje: "El usuario no existe en la base de datos" });
       }
     }
+    const usuarioExiste = await ProjectModel.findByPk(user_id);
+    if (!user_id) {
+      return res
+        .status(404)
+        .json({
+          mensaje: "falta el usuario,crea el usuario para agregar tarea",
+        });
+    }
     const projectoExiste = await ProjectModel.findByPk(project_id);
     if (!project_id) {
       return res.status(404).json({

@@ -13,6 +13,7 @@ export const getUsersTodos = async (req, res) => {
         {
           model: TaskModel,
           as: "tasks",
+          attributes: ["title", "description"],
         },
         {
           model: ProfileModel,
@@ -77,7 +78,7 @@ export const getPorIdUsers = async (req, res) => {
     const idUsers = await UserModel.findByPk(req.params.id, {
       attributes: { exclude: ["password"] },
       include: [
-        { model: TaskModel, as: "tasks" },
+        { model: TaskModel, as: "tasks", attributes: ["title", "description"] },
         {
           model: ProfileModel,
           as: "profile",
