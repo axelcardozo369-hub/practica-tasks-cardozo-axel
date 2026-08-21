@@ -1,3 +1,4 @@
+import { matchedData, validationResult } from "express-validator";
 import { ProfileModel } from "../models/profile.model.js";
 import { ProjectModel } from "../models/project.model.js";
 import { TaskModel } from "../models/tasks.model.js";
@@ -34,21 +35,12 @@ export const getUsersTodos = async (req, res) => {
 };
 export const agregarUsers = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-      return res.status(400).json({
-        mensaje: "No pueden estar vacios,por favor ingrese datos requeridos",
-      });
-    }
-    const nuevoUser = await UserModel.create({
-      name,
-      email,
-      password,
-    });
-    res.status(201).json({ mensaje: "Usuario agregado con exito", nuevoUser });
+    const validationData = matchedData(req);
+    const user = await UserModel.create(validationData);
+    res.status(201).json({ mensaje: "Usuario agregado con exito", user });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ mensaje: "Error al poder agregar usuarios" });
+    return res.status(500).json({ mensaje: "Error al poder agregar usuarios" });
   }
 };
 export const editarUsers = async (req, res) => {
