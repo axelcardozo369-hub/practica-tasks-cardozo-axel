@@ -7,7 +7,7 @@ import { projectRouter } from "../routes/projects.routes.js";
 
 export const agregarProject = async (req, res) => {
   try {
-    const { nombre, descripcion, user_id } = req.body;
+    const { nombre, description, user_id } = req.body;
     if (user_id) {
       const usuarioExiste = await UserModel.findByPk(user_id);
       if (!usuarioExiste) {
@@ -18,7 +18,7 @@ export const agregarProject = async (req, res) => {
     }
     const nuevoProject = await ProjectModel.create({
       nombre,
-      descripcion,
+      description,
       user_id,
     });
     return res.status(201).json({ mensaje: "proyecto agregado con exito" });
@@ -51,7 +51,7 @@ export const getAllProjects = async (req, res) => {
           as: "tasks",
           attributes: ["title", "description", "user_id"],
         },
-        { model: CategoryModel, as: "category", attributes: ["name"] },
+        { model: CategoryModel, as: "categories", attributes: ["name"] },
       ],
     });
     return res

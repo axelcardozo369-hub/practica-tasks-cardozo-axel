@@ -6,7 +6,7 @@ export const agregarCategory = async (req, res) => {
     const nuevaCategory = await CategoryModel.create({
       name,
     });
-    res.status(201).json({ mensaje: "categoria agregada con exito" });
+    res.status(201).json({ mensaje: "categoria agregada con exito",nuevaCategory });
   } catch (error) {
     return res
       .status(500)
@@ -17,7 +17,7 @@ export const getCategoryTodos = async (req, res) => {
   try {
     const category = await CategoryModel.findAll();
     return res
-      .status(201)
+      .status(200)
       .json({ mensaje: "estos son todos las categorias", category });
   } catch (error) {
     return res.status(500).json({
@@ -29,7 +29,7 @@ export const getCategoryTodos = async (req, res) => {
 export const eliminarCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    const borrarCategory = CategoryModel.destroy({ where: { id } });
+    const borrarCategory = await CategoryModel.destroy({ where: { id } });
     if (borrarCategory) {
       res.status(201).json({ mensaje: "categoria borrada" });
     } else {

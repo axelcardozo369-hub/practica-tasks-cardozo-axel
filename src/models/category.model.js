@@ -12,7 +12,8 @@ export const CategoryModel = sequelize.define("category", {
     type: DataTypes.STRING(100),
     allowNull: false,
     unique: true,
-  },
+  }
+  
 });
 // CategoryModel.hasMany(ProjectModel, {
 //   foreignKey: "category_id",

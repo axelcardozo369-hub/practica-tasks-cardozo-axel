@@ -11,7 +11,7 @@ export const ProjectModel = sequelize.define("project", {
     type: DataTypes.STRING(100),
     allowNull: false,
   },
-  descripcion: {
+  description: {
     type: DataTypes.STRING(100),
     allowNull: false,
   },

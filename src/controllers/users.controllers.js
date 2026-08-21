@@ -23,7 +23,7 @@ export const getUsersTodos = async (req, res) => {
         {
           model: ProjectModel,
           as: "projects",
-          attributes: ["user_id", "nombre", "descripcion"],
+          attributes: ["user_id", "nombre", "description"],
         },
       ],
     });
