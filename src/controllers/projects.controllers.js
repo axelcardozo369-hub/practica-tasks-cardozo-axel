@@ -49,7 +49,7 @@ export const getAllProjects = async (req, res) => {
         {
           model: TaskModel,
           as: "tasks",
-          attributes: ["title", "description", "user_id"],
+          attributes: ["title", "user_id"],
         },
         { model: CategoryModel, as: "categories", attributes: ["name"] },
       ],
