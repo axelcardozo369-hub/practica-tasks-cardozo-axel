@@ -1,3 +1,4 @@
+import { matchedData } from "express-validator";
 import { ProjectModel } from "../models/project.model.js";
 import { TaskModel } from "../models/tasks.model.js";
 import { UserModel } from "../models/users.model.js";
@@ -13,7 +14,9 @@ export const getTasks = async (req, res) => {
         },
       ],
     });
-    return res.status(200).json({mensaje:'estas son todas las tareas',tasks})
+    return res
+      .status(200)
+      .json({ mensaje: "estas son todas las tareas", tasks });
   } catch (error) {
     console.log(error);
     res
@@ -39,44 +42,8 @@ export const verPorIdTask = async (req, res) => {
 };
 export const agregarTask = async (req, res) => {
   try {
-    const { title, description, user_id, project_id } = req.body;
-
-    if (user_id) {
-      const usuarioExiste = await UserModel.findByPk(user_id);
-      if (!usuarioExiste) {
-        return res
-          .status(404)
-          .json({ mensaje: "El usuario no existe en la base de datos" });
-      }
-    }
-    const usuarioExiste = await ProjectModel.findByPk(user_id);
-    if (!user_id) {
-      return res
-        .status(404)
-        .json({
-          mensaje: "falta el usuario,crea el usuario para agregar tarea",
-        });
-    }
-    const projectoExiste = await ProjectModel.findByPk(project_id);
-    if (!project_id) {
-      return res.status(404).json({
-        mensaje:
-          "falta el proyecto, primero debes crear tu proyecto para agregar tareas",
-      });
-    }
-    const projectExistente = await ProjectModel.findByPk(project_id);
-    if (!projectExistente) {
-      return res
-        .status(400)
-        .json({ mensaje: "Error, debes crear el proyecto primero" });
-    }
-
-    const taskNueva = await TaskModel.create({
-      title,
-      description,
-      user_id,
-      project_id,
-    });
+    const validationData = matchedData(req);
+    const task = await TaskModel.create(validationData);
     return res.status(201).json({ mensaje: "tarea agregada con exito" });
   } catch (error) {
     console.log(error);

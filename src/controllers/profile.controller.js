@@ -1,3 +1,4 @@
+import { matchedData } from "express-validator";
 import { ProfileModel } from "../models/profile.model.js";
 import { TaskModel } from "../models/tasks.model.js";
 import { UserModel } from "../models/users.model.js";
@@ -19,31 +20,9 @@ export const getAllProfiles = async (req, res) => {
 
 export const agregarProfiles = async (req, res) => {
   try {
-    const { biografia, telefono, user_id } = req.body;
-    if (!biografia || !telefono || !user_id) {
-      return res.status(400).json({ mensaje: "cada campo es obligatorio" });
-    }
-    if (user_id) {
-      const usuarioExiste = await UserModel.findByPk(user_id);
-      if (!usuarioExiste) {
-        return res
-          .status(404)
-          .json({ mensaje: "el usuario no está en la base de datos" });
-      }
-    }
-
-    const perfilExistente = await ProfileModel.findOne({ where: { user_id } });
-    if (perfilExistente) {
-      return res.status(400).json({
-        mensaje: "El usuario que ingresaste ya está registrado con otro perfil",
-      });
-    }
-    const profileNuevo = await ProfileModel.create({
-      biografia,
-      telefono,
-      user_id,
-    });
-    return res.status(201).json({ mensaje: "perfil creado correctamente" });
+    const validationData = matchedData(req);
+    const profile = await ProfileModel.create(validationData);
+    return res.status(201).json({ mensaje: "perfil creado con exito" });
   } catch (error) {
     return res
       .status(500)

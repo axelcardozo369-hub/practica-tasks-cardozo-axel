@@ -18,7 +18,7 @@ const PORT = 3005;
 app.use(express.json());
 const probarConexionDataBase = async () => {
   try {
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ force: false });
     console.log("Conexion con tu base de datos exitosa Axel");
     await sequelize.sync();
     console.log("Tablas de usuarios y de las tareas conectadas correctamente");
