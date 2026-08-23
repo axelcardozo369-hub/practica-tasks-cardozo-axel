@@ -52,9 +52,9 @@ export const getPorIdProfile = async (req, res) => {
 export const eliminarProfile = async (req, res) => {
   try {
     const { id } = req.params;
-    const borrarProject = await ProfileModel.destroy({ where: { id } });
-    if (borrarProject) {
-      return res.json({ mensaje: "ser borro el perfil" });
+    const borrarProfile = await ProfileModel.destroy({ where: { id } });
+    if (borrarProfile) {
+      return res.json({ mensaje: "se borro el perfil" });
     } else {
       return res.json({ mensaje: "No se encontro el perfil" });
     }
@@ -62,5 +62,30 @@ export const eliminarProfile = async (req, res) => {
     return res
       .status(500)
       .json({ mensaje: "Error al eliminar", error: error.message });
+  }
+};
+
+export const editarProfile = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { biografia, telefono, user_id } = req.body;
+    const profileAfectadas = await ProfileModel.update(
+      { biografia, telefono, user_id },
+      { where: { id } },
+    );
+    if (profileAfectadas > 0) {
+      const ProfileModificado = await ProfileModel.findByPk(id);
+      return res.json({
+        mensaje: "el perfil fué modificado",
+        ProfileModificado,
+      });
+    } else {
+      return res.status(404).json({ mensaje: "el perfil no fue encontrado" });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      mensaje: "Error al intentar editar perfiles",
+      error: error.message,
+    });
   }
 };

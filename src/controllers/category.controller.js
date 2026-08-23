@@ -1,12 +1,12 @@
+import { matchedData, validationResult } from "express-validator";
 import { CategoryModel } from "../models/category.model.js";
-
 export const agregarCategory = async (req, res) => {
   try {
-    const { name } = req.body;
-    const nuevaCategory = await CategoryModel.create({
-      name,
-    });
-    res.status(201).json({ mensaje: "categoria agregada con exito",nuevaCategory });
+    const validateData = matchedData(req);
+    const category = await CategoryModel.create(validateData);
+    return res
+      .status(201)
+      .json({ mensaje: "categoria agregada con exito", category });
   } catch (error) {
     return res
       .status(500)
@@ -41,5 +41,35 @@ export const eliminarCategory = async (req, res) => {
     return res
       .status(500)
       .json({ mensaje: "Error al borrar categorias", error: error.message });
+  }
+};
+export const getPorIdCategory = async (req, res) => {
+  try {
+    const categoryUser = await CategoryModel.findByPk(req.params.id);
+    if (categoryUser) {
+      res.json(categoryUser);
+    } else {
+      res.status(404).json({ mensaje: "la categoria no fue encontrada" });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      mensaje: "error al poder ver esta categoria",
+      error: error.message,
+    });
+  }
+};
+export const editarCategory = async (req, res) => {
+  try {
+    const { id, name } = matchedData(req);
+    await CategoryModel.update({ name }, { where: { id } });
+    const categoryModificado = await CategoryModel.findByPk(id);
+    return res
+      .status(200)
+      .json({ mensaje: "categoria actualizada con exito", categoryModificado });
+  } catch (error) {
+    return res.status(500).json({
+      mensaje: "error al poder actualizar esta categoria",
+      error: error.message,
+    });
   }
 };

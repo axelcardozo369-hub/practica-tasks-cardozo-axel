@@ -1,3 +1,4 @@
+import { matchedData } from "express-validator";
 import { CategoryModel } from "../models/category.model.js";
 import { ProfileModel } from "../models/profile.model.js";
 import { ProjectModel } from "../models/project.model.js";
@@ -7,20 +8,8 @@ import { projectRouter } from "../routes/projects.routes.js";
 
 export const agregarProject = async (req, res) => {
   try {
-    const { nombre, description, user_id } = req.body;
-    if (user_id) {
-      const usuarioExiste = await UserModel.findByPk(user_id);
-      if (!usuarioExiste) {
-        return res
-          .status(404)
-          .json({ mensaje: "El usuario no existe en la base de datos" });
-      }
-    }
-    const nuevoProject = await ProjectModel.create({
-      nombre,
-      description,
-      user_id,
-    });
+    const validationData = matchedData(req);
+    const project = await ProjectModel.create(validationData);
     return res.status(201).json({ mensaje: "proyecto agregado con exito" });
   } catch (error) {
     console.log(error);
@@ -76,6 +65,47 @@ export const getPorIdProject = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       mensaje: "error interno al poder ver cada proyecto",
+      error: error.message,
+    });
+  }
+};
+export const eliminarProject = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const borrarProject = await ProjectModel.destroy({ where: { id } });
+    if (borrarProject) {
+      return res
+        .status(200)
+        .json({ mensaje: "eliminacion exitosa a este proyecto" });
+    } else {
+      return res.status(404).json({ mensaje: "el proyecto no fue encontrado" });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ mensaje: "error al elimnar projectos", error: error.message });
+  }
+};
+export const editarProject = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { nombre, description, user_id } = req.body;
+    const projectAfectados = await ProjectModel.update(
+      { nombre, description, user_id },
+      { where: { id } },
+    );
+    if (projectAfectados > 0) {
+      const ProjectModificado = await ProjectModel.findByPk(id);
+      return res.json({
+        mensaje: "el proyecto fué modificado",
+        ProjectModificado,
+      });
+    } else {
+      return res.status(404).json({ mensaje: "el proyecto no fue encontrado" });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      mensaje: "error al poder editar el project",
       error: error.message,
     });
   }

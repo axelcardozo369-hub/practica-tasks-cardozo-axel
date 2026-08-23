@@ -5,7 +5,7 @@ export const crearUserValidation = [
   body("name").notEmpty().withMessage("El nombre no debe estar vacio"),
   body("email")
     .notEmpty()
-    .withMessage("el emai no debe ser vacio")
+    .withMessage("el email no debe ser vacio")
     .bail()
     .isEmail()
     .withMessage("el email debe ser si o si valido")

@@ -6,13 +6,23 @@ import {
   getTasks,
   verPorIdTask,
 } from "../controllers/tasks.controllers.js";
-import { agregaTaskValidation } from "../middlewares/validations/task.validation.js";
+import {
+  agregaTaskValidation,
+  editarTaskValidation,
+  eliminarTaksValidation,
+  TaskPorIdValidator,
+} from "../middlewares/validations/task.validation.js";
 import { validate } from "../middlewares/validate.js";
 
 export const routerTask = Router();
 
 routerTask.get("/tasks", getTasks);
-routerTask.get("/tasks/:id", verPorIdTask);
+routerTask.get("/tasks/:id", TaskPorIdValidator, validate, verPorIdTask);
 routerTask.post("/tasks", agregaTaskValidation, validate, agregarTask);
-routerTask.put("/tasks/:id", editarTask);
-routerTask.delete("/tasks/:id", eliminarTasks);
+routerTask.put("/tasks/:id", editarTaskValidation, validate, editarTask);
+routerTask.delete(
+  "/tasks/:id",
+  eliminarTaksValidation,
+  validate,
+  eliminarTasks,
+);
