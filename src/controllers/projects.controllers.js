@@ -1,11 +1,10 @@
-import { matchedData } from "express-validator";
+import { matchedData, validationResult } from "express-validator";
 import { CategoryModel } from "../models/category.model.js";
 import { ProfileModel } from "../models/profile.model.js";
 import { ProjectModel } from "../models/project.model.js";
 import { TaskModel } from "../models/tasks.model.js";
 import { UserModel } from "../models/users.model.js";
 import { projectRouter } from "../routes/projects.routes.js";
-
 export const agregarProject = async (req, res) => {
   try {
     const validationData = matchedData(req);
@@ -72,37 +71,35 @@ export const getPorIdProject = async (req, res) => {
 export const eliminarProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const borrarProject = await ProjectModel.destroy({ where: { id } });
-    if (borrarProject) {
-      return res
-        .status(200)
-        .json({ mensaje: "eliminacion exitosa a este proyecto" });
-    } else {
-      return res.status(404).json({ mensaje: "el proyecto no fue encontrado" });
-    }
+
+    await ProjectModel.destroy({
+      where: {
+        id,
+      },
+    });
+
+    return res
+      .status(200)
+      .json({ message: "proyecto eliminado correctamente" });
   } catch (error) {
     return res
       .status(500)
-      .json({ mensaje: "error al elimnar projectos", error: error.message });
+      .json({ mensaje: "error al eliminar projectos", error: error.message });
   }
 };
+
 export const editarProject = async (req, res) => {
   try {
-    const id = req.params.id;
-    const { nombre, description, user_id } = req.body;
-    const projectAfectados = await ProjectModel.update(
-      { nombre, description, user_id },
-      { where: { id } },
-    );
-    if (projectAfectados > 0) {
-      const ProjectModificado = await ProjectModel.findByPk(id);
-      return res.json({
-        mensaje: "el proyecto fué modificado",
-        ProjectModificado,
-      });
-    } else {
-      return res.status(404).json({ mensaje: "el proyecto no fue encontrado" });
+    const validationData = matchedData(req, { locations: ["body"] });
+    const { id } = matchedData(req, { locations: ["params"] });
+    const projectExiste = await ProjectModel.findByPk(id);
+    if (!projectExiste) {
+      return res.status(404).json({ message: "proyecto no encontrado" });
     }
+
+    await projectExiste.update(validatedDataBody);
+
+    return res.json({ mensaje: "el proyecto fué modificado", validationData });
   } catch (error) {
     return res.status(500).json({
       mensaje: "error al poder editar el project",
