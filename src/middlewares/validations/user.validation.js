@@ -66,17 +66,23 @@ export const editarUserValidator = [
       return true;
     }),
   body("name")
+    .optional()
     .notEmpty()
-    .withMessage("el nombre del usuario no puede quedar vacio"),
+    .withMessage("el nombre del usuario no puede quedar vacio")
+    .bail(),
   body("email")
+    .optional()
     .notEmpty()
     .withMessage("El email no puede ser vacio")
     .bail()
     .isEmail()
-    .withMessage("el email debe ser valido"),
+    .withMessage("el email debe ser valido")
+    .bail(),
   body("password")
+    .optional()
     .notEmpty()
     .withMessage("el passowrd no puede ser vacio")
+    .bail()
     .isLength({ min: 10 })
     .withMessage("la contraseña debe ser al menos 10 digitos"),
 ];

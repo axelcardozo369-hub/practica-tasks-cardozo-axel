@@ -55,18 +55,9 @@ export const agregarTask = async (req, res) => {
 };
 export const editarTask = async (req, res) => {
   try {
-    const id = req.params.id;
-    const { title, description } = req.body;
-    const taskAfectadas = await TaskModel.update(
-      { title, description },
-      { where: { id } },
-    );
-    if (taskAfectadas > 0) {
-      const taskModificada = await TaskModel.findByPk(id);
-      return res.json({ mensaje: "la tarea fué modificada", taskModificada });
-    } else {
-      return res.status(404).json({ mensaje: "la tarea no fue encontrada" });
-    }
+    const validationDataBody = matchedData(req, { locations: ["body"] });
+    console.log(validationDataBody);
+    return res.status(201).json({ mensaje: "la tarea fue modificada" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
