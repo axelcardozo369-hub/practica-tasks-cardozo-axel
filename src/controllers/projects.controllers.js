@@ -97,7 +97,7 @@ export const editarProject = async (req, res) => {
       return res.status(404).json({ message: "proyecto no encontrado" });
     }
 
-    await projectExiste.update(validatedDataBody);
+    await projectExiste.update(validationData);
 
     return res.json({ mensaje: "el proyecto fué modificado", validationData });
   } catch (error) {

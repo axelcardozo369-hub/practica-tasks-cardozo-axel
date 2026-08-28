@@ -46,7 +46,13 @@ export const agregarUsers = async (req, res) => {
 export const editarUsers = async (req, res) => {
   try {
     const validationData = matchedData(req, { locations: ["body"] });
-    return res.json({ mensaje: "el usuario fué modificado", validationData });
+    const { id } = matchedData(req, { locations: ["params"] });
+    const userExist = await UserModel.findByPk(id);
+    if (!userExist) {
+      return res.status(404).json({ mensaje: "usuario no encontrado" });
+    }
+    await userExist.update(validationData);
+    return res.status(201).json({ mensaje: "usuario editado", userExist });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
